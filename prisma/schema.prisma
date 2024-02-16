@@ -11,25 +11,28 @@ datasource db {
 }
 
 model Job {
-  id                        String      @id @default(uuid())
+  id                        Int      @id @default(autoincrement())
   title                     String   
   banner                    String?
   stack                     String
-  level                     String
+  company                   String
   description               String
+  contract_type             String
   registration_link         String   
+  experience_level          String
+  location_type             String 
 
   created_at                DateTime? @default(now())
   updated_at                DateTime? @default(now())
 
   reporter                  User     @relation(fields: [reporter_id], references: [id])
-  reporter_id                Int
+  reporter_id                String
 
   @@map("jobs")
 }
 
 model User {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   admin       Boolean?    @default(false)
   email       String      @unique
   name        String
