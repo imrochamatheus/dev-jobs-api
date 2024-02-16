@@ -1,21 +1,24 @@
 -- CreateTable
 CREATE TABLE "jobs" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "title" TEXT NOT NULL,
     "banner" TEXT,
     "stack" TEXT NOT NULL,
-    "level" TEXT NOT NULL,
+    "company" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "contract_type" TEXT NOT NULL,
     "registration_link" TEXT NOT NULL,
+    "experience_level" TEXT NOT NULL,
+    "location_type" TEXT NOT NULL,
     "created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
-    "reporter_id" INTEGER NOT NULL,
+    "reporter_id" TEXT NOT NULL,
     CONSTRAINT "jobs_reporter_id_fkey" FOREIGN KEY ("reporter_id") REFERENCES "users" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "admin" BOOLEAN DEFAULT false,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
