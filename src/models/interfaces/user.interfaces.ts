@@ -19,6 +19,6 @@ export interface UserResponse {
 	id: string;
 	email: string;
 	name: string;
-	admin: boolean | null;
+	admin: boolean;
 	created_at: Date;
 }
