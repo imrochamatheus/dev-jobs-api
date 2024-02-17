@@ -18,7 +18,9 @@ export interface UserCreateResponse extends Pick<User, "id" | "email"> {
 export interface UserResponse {
 	id: string;
 	email: string;
-	name: string;
 	admin: boolean;
+	last_name: string;
+	first_name: string;
+
 	created_at: Date;
 }

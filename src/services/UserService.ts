@@ -1,7 +1,7 @@
 import {prisma} from "../prisma";
 
 import {
-	User,
+	UserResponse,
 	UserCreateRequest,
 	UserCreateResponse,
 } from "../models/interfaces/user.interfaces";
@@ -32,10 +32,20 @@ export class UserService {
 		};
 	}
 
-	public async getAllUsers(): Promise<User[]> {
+	public async getAllUsers(): Promise<UserResponse[]> {
 		const users = await prisma.user.findMany();
 
 		return users;
+	}
+
+	public async getUserById(id: string): Promise<UserResponse | null> {
+		const user = await prisma.user.findFirst({
+			where: {
+				id,
+			},
+		});
+
+		return user;
 	}
 }
 
