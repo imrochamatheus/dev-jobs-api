@@ -1,5 +1,4 @@
 import {Request, Response, Router} from "express";
-
 import {userController} from "../controllers/UserController";
 
 const USER_ROUTER = Router();

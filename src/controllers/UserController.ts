@@ -4,17 +4,21 @@ import {
 	UserResponse,
 	UserCreateRequest,
 } from "../models/interfaces/user.interfaces";
-import {UserService, userService} from "../services/UserService";
-4;
+import {IUserService, userService} from "../services/UserService";
 
-class UserController {
+export class UserController {
 	private static _instance: UserController;
-	private constructor(private readonly userService: UserService) {}
+	private _userService: IUserService;
+
+	private constructor(userService: IUserService) {
+		this._userService = userService;
+	}
 
 	public static getInstance(): UserController {
 		if (!UserController._instance) {
 			UserController._instance = new UserController(userService);
 		}
+
 		return UserController._instance;
 	}
 
@@ -24,12 +28,10 @@ class UserController {
 	): Promise<void> {
 		const userData: UserCreateRequest = req.body;
 
-		try {
-			const response = await this.userService.createUser(userData);
+		const response = await this._userService.createUser(userData);
 
+		if (response) {
 			res.status(201).send(response);
-		} catch (error) {
-			res.status(500).send(error);
 		}
 	}
 
@@ -37,7 +39,7 @@ class UserController {
 		_: Request,
 		res: Response<UserResponse[]>
 	): Promise<void> {
-		const users: UserResponse[] = await this.userService.getAllUsers();
+		const users: UserResponse[] = await this._userService.getAllUsers();
 
 		res.status(200).send(users);
 	}
@@ -45,7 +47,7 @@ class UserController {
 	public async getUserById({params}: Request, res: Response): Promise<void> {
 		const user_id: string = params.id;
 
-		const user: UserResponse | null = await this.userService.getUserById(
+		const user: UserResponse | null = await this._userService.getUserById(
 			user_id
 		);
 
