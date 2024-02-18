@@ -1,9 +1,10 @@
-import {Job, JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
 import {prisma} from "../prisma";
+import {Job, JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
 
 export interface IJobRepository {
 	getAllJobs(): Promise<JobResponse[]>;
 	createJob(job: JobCreate): Promise<JobResponse>;
+	getJobById(id: number): Promise<JobResponse | null>;
 }
 
 export class JobRepository implements IJobRepository {
@@ -23,10 +24,28 @@ export class JobRepository implements IJobRepository {
 			},
 		});
 	}
+
 	public async createJob(jobData: Job): Promise<JobResponse> {
 		return await prisma.job.create({
 			data: {
 				...jobData,
+			},
+			include: {
+				reporter: {
+					select: {
+						name: true,
+						email: true,
+						created_at: true,
+					},
+				},
+			},
+		});
+	}
+
+	public async getJobById(id: number): Promise<JobResponse | null> {
+		return await prisma.job.findFirst({
+			where: {
+				id,
 			},
 			include: {
 				reporter: {

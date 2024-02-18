@@ -24,12 +24,24 @@ class JobController {
 		res: CustomResponse<JobResponse>
 	): Promise<void> {
 		const {body} = req;
-
-		console.log(body);
 		const response = await this.jobService.createJob(body);
 
 		res.status(201).send({
 			message: "Criado com sucesso!",
+			data: response,
+		});
+	}
+
+	public async getJobById(
+		{params}: Request<{id: number}>,
+		res: CustomResponse<JobResponse>
+	): Promise<void> {
+		const {id} = params;
+
+		const response = await this.jobService.getJobById(Number(id));
+
+		res.status(200).send({
+			message: "Carregado com sucesso!",
 			data: response,
 		});
 	}

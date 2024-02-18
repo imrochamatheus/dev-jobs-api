@@ -6,7 +6,6 @@ import {ApiError} from "../helpers/apiError";
 
 export class JobService {
 	private static _instance: JobService;
-	// private _usersRepository: IUserRepository;
 
 	private constructor(
 		private readonly _usersRepository: IUserRepository,
@@ -46,6 +45,16 @@ export class JobService {
 			...data,
 			reporter_id,
 		});
+	}
+
+	public async getJobById(id: number): Promise<JobResponse> {
+		const job: JobResponse | null = await this._jobRepository.getJobById(id);
+
+		if (!job) {
+			throw new ApiError(404, "Vaga não encontrada");
+		}
+
+		return job;
 	}
 }
 
