@@ -3,5 +3,4 @@ export enum SeniorityLevel {
 	JUNIOR = "junior",
 	SENIOR = "senior",
 	INTERN = "estagiário",
-	ASSISTANT = "assistente",
 }

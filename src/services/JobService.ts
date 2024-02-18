@@ -1,8 +1,7 @@
-import {prisma} from "../prisma";
-import {Job, JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
-import {IUserRepository, userRepository} from "../repositories/userRepository";
-import {IJobRepository, jobRepository} from "../repositories/jobRepository";
 import {ApiError} from "../helpers/apiError";
+import {JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
+import {IJobRepository, jobRepository} from "../repositories/jobRepository";
+import {IUserRepository, userRepository} from "../repositories/userRepository";
 
 export class JobService {
 	private static _instance: JobService;
@@ -27,6 +26,16 @@ export class JobService {
 		return await this._jobRepository.getAllJobs();
 	}
 
+	public async getJobById(id: number): Promise<JobResponse> {
+		const job: JobResponse | null = await this._jobRepository.getJobById(id);
+
+		if (!job) {
+			throw new ApiError(404, "Vaga não encontrada");
+		}
+
+		return job;
+	}
+
 	public async createJob({
 		reporter_id,
 		...data
@@ -45,16 +54,6 @@ export class JobService {
 			...data,
 			reporter_id,
 		});
-	}
-
-	public async getJobById(id: number): Promise<JobResponse> {
-		const job: JobResponse | null = await this._jobRepository.getJobById(id);
-
-		if (!job) {
-			throw new ApiError(404, "Vaga não encontrada");
-		}
-
-		return job;
 	}
 }
 

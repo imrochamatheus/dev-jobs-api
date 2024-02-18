@@ -1,16 +1,23 @@
 import {prisma} from "../prisma";
-import {Job, JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
+import {
+	Job,
+	JobCreate,
+	JobResponse,
+	JobUpdateResponse,
+} from "../models/interfaces/job.interfaces";
 
 export interface IJobRepository {
 	getAllJobs(): Promise<JobResponse[]>;
 	createJob(job: JobCreate): Promise<JobResponse>;
 	getJobById(id: number): Promise<JobResponse | null>;
+	updateJob(id: number, data: Partial<JobCreate>): Promise<JobUpdateResponse>;
 }
 
 export class JobRepository implements IJobRepository {
 	private static _instance: JobRepository;
 
 	private constructor() {}
+
 	public async getAllJobs(): Promise<JobResponse[]> {
 		return await prisma.job.findMany({
 			include: {
@@ -57,6 +64,23 @@ export class JobRepository implements IJobRepository {
 				},
 			},
 		});
+	}
+
+	public async updateJob(
+		id: number,
+		data: Partial<JobCreate>
+	): Promise<JobUpdateResponse> {
+		const updatededJob = await prisma.job.update({
+			where: {
+				id,
+			},
+			data: {
+				...data,
+				updated_at: new Date(),
+			},
+		});
+
+		return updatededJob;
 	}
 
 	public static getInstance(): JobRepository {
