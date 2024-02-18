@@ -18,5 +18,9 @@ export interface Job {
 
 export interface JobCreate extends Omit<Job, "id" | "created_at"> {}
 export interface JobResponse extends Omit<Job, "reporter_id"> {
-	reporter: UserResponse;
+	reporter: {
+		name: string;
+		email: string;
+		created_at: Date;
+	};
 }

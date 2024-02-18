@@ -1,55 +1,55 @@
 import {prisma} from "../prisma";
-import {userService} from "./UserService";
 import {Job, JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
+import {IUserRepository, userRepository} from "../repositories/userRepository";
+import {IJobRepository, jobRepository} from "../repositories/jobRepository";
+import {ApiError} from "../helpers/apiError";
 
 export class JobService {
 	private static _instance: JobService;
+	// private _usersRepository: IUserRepository;
 
-	private constructor() {}
+	private constructor(
+		private readonly _usersRepository: IUserRepository,
+		private readonly _jobRepository: IJobRepository
+	) {}
 
-	public static getInstance(): JobService {
+	public static getInstance(
+		_usersRepository: IUserRepository,
+		_jobsRepository: IJobRepository
+	): JobService {
 		if (!JobService._instance) {
-			JobService._instance = new JobService();
+			JobService._instance = new JobService(_usersRepository, _jobsRepository);
 		}
 
 		return JobService._instance;
 	}
 
 	public async getAllJobs(): Promise<JobResponse[]> {
-		const response = await prisma.job.findMany({
-			include: {
-				reporter: {
-					select: {
-						id: true,
-						email: true,
-						admin: true,
-						last_name: true,
-						first_name: true,
-						created_at: true,
-					},
-				},
-			},
-		});
-
-		return response;
+		return await this._jobRepository.getAllJobs();
 	}
 
-	public async createJob({reporter_id, ...data}: JobCreate): Promise<unknown> {
-		const reporter = await userService.getUserById(reporter_id);
+	public async createJob({
+		reporter_id,
+		...data
+	}: JobCreate): Promise<JobResponse> {
+		const reporter = await this._usersRepository.getUserById(reporter_id);
 
 		if (!reporter) {
-			return "Usuário não encontrado";
+			throw new ApiError(404, "Usuário não encontrado");
 		}
 
-		const response: Job = await prisma.job.create({
-			data: {
-				...data,
-				reporter_id,
-			},
-		});
+		if (!reporter.recruiter) {
+			throw new ApiError(401, "Usuário não é um recrutador");
+		}
 
-		return response;
+		return await this._jobRepository.createJob({
+			...data,
+			reporter_id,
+		});
 	}
 }
 
-export const jobService: JobService = JobService.getInstance();
+export const jobService: JobService = JobService.getInstance(
+	userRepository,
+	jobRepository
+);

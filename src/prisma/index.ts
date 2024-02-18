@@ -5,7 +5,7 @@ const PASSWORD_KEY: string = "password";
 const CREATE_OPERATION: string = "create";
 const UPDATE_OPERATION: string = "update";
 
-type ExtendedPrismaClient = ReturnType<typeof addExtensionsToClient>;
+export type ExtendedPrismaClient = ReturnType<typeof addExtensionsToClient>;
 
 const requiresPasswordHashing = (operation: string, args: any): Boolean => {
 	return (
@@ -51,7 +51,7 @@ const addExtensionsToClient = (instance: PrismaClient) => {
 	});
 };
 
-export class PrismaSingleton {
+class PrismaSingleton {
 	private static instance: ExtendedPrismaClient;
 
 	private constructor() {}
