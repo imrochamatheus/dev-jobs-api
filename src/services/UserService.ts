@@ -11,7 +11,7 @@ import {IUserRepository, userRepository} from "../repositories/userRepository";
 export interface IUserService {
 	createUser(data: UserCreateRequest): Promise<UserCreateResponse | void>;
 	getAllUsers(): Promise<UserResponse[]>;
-	getUserById(id: string): Promise<UserResponse | null>;
+	getUserById(id: string): Promise<UserResponse>;
 }
 
 export class UserService implements IUserService {
@@ -30,22 +30,22 @@ export class UserService implements IUserService {
 	}
 
 	public async createUser(
-		data: UserCreateRequest
+		userData: UserCreateRequest
 	): Promise<UserCreateResponse | void> {
-		const user = await this._userRepository.getUserByEmail(data.email);
+		const user = await this._userRepository.getUserByEmail(userData.email);
 
 		if (user) {
-			throw new ApiError("Este e-mail já está cadastrado", 409);
+			throw new ApiError(409, "Este e-mail já está cadastrado");
 		}
 
-		const {id, email, first_name, last_name} = await prisma.user.create({
-			data,
+		const createdUser = await prisma.user.create({
+			data: userData,
 		});
 
 		return {
-			id,
-			email,
-			name: `${first_name} ${last_name}`,
+			id: createdUser.id,
+			email: createdUser.email,
+			name: `${createdUser.first_name} ${createdUser.last_name}`,
 		};
 	}
 
@@ -55,12 +55,12 @@ export class UserService implements IUserService {
 		return users;
 	}
 
-	public async getUserById(id: string): Promise<UserResponse | null> {
-		const user = await prisma.user.findFirst({
-			where: {
-				id,
-			},
-		});
+	public async getUserById(id: string): Promise<UserResponse> {
+		const user = await this._userRepository.getUserById(id);
+
+		if (!user) {
+			throw new ApiError(404, "Usuário não encontrado!");
+		}
 
 		return user;
 	}

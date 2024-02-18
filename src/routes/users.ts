@@ -1,14 +1,9 @@
-import {Request, Response, Router} from "express";
+import {Router} from "express";
 import {userController} from "../controllers/UserController";
 
 const USER_ROUTER = Router();
 
-USER_ROUTER.get("/", (req: Request, res: Response) => {
-	userController.getAllUsers(req, res);
-});
-
-USER_ROUTER.post("/", (req: Request, res: Response) => {
-	userController.createUser(req, res);
-});
+USER_ROUTER.get("/", userController.getAllUsers.bind(userController));
+USER_ROUTER.post("/", userController.createUser.bind(userController));
 
 export {USER_ROUTER};

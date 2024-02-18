@@ -3,7 +3,9 @@ import {Request, Response} from "express";
 import {
 	UserResponse,
 	UserCreateRequest,
+	UserCreateResponse,
 } from "../models/interfaces/user.interfaces";
+import {CustomResponse} from "../helpers/defaultResponse";
 import {IUserService, userService} from "../services/UserService";
 
 export class UserController {
@@ -24,34 +26,44 @@ export class UserController {
 
 	public async createUser(
 		req: Request<{}, {}, UserCreateRequest>,
-		res: Response
+		res: CustomResponse<UserCreateResponse>
 	): Promise<void> {
 		const userData: UserCreateRequest = req.body;
 
 		const response = await this._userService.createUser(userData);
 
 		if (response) {
-			res.status(201).send(response);
+			res.status(201).send({
+				message: "Usuário criado com sucesso!",
+				data: response,
+			});
 		}
 	}
 
 	public async getAllUsers(
 		_: Request,
-		res: Response<UserResponse[]>
+		res: CustomResponse<UserResponse[]>
 	): Promise<void> {
 		const users: UserResponse[] = await this._userService.getAllUsers();
 
-		res.status(200).send(users);
+		res.status(200).send({
+			message: "Carregado com sucesso!",
+			data: users,
+		});
 	}
 
-	public async getUserById({params}: Request, res: Response): Promise<void> {
+	public async getUserById(
+		{params}: Request,
+		res: CustomResponse<UserResponse>
+	): Promise<void> {
 		const user_id: string = params.id;
 
-		const user: UserResponse | null = await this._userService.getUserById(
-			user_id
-		);
+		const user: UserResponse = await this._userService.getUserById(user_id);
 
-		res.status(200).send(user);
+		res.status(200).send({
+			message: "Carregado com sucesso!",
+			data: user,
+		});
 	}
 }
 

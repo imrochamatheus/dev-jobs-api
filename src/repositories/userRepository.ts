@@ -33,18 +33,15 @@ class UserRepository implements IUserRepository {
 		return response;
 	}
 	public async getAllUsers(): Promise<UserResponse[]> {
-		const users = await prisma.user.findMany();
-
-		return users;
+		return await prisma.user.findMany();
 	}
+
 	public async getUserById(id: string): Promise<UserResponse | null> {
-		const user = prisma.user.findFirst({
+		return prisma.user.findFirst({
 			where: {
 				id,
 			},
 		});
-
-		return user;
 	}
 
 	public async getUserByEmail(email: string): Promise<UserResponse | null> {
