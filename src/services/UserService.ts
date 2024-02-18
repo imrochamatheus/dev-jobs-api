@@ -44,8 +44,8 @@ export class UserService implements IUserService {
 
 		return {
 			id: createdUser.id,
+			name: createdUser.name,
 			email: createdUser.email,
-			name: `${createdUser.first_name} ${createdUser.last_name}`,
 		};
 	}
 

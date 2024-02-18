@@ -20,14 +20,14 @@ class UserRepository implements IUserRepository {
 	public async createUser(
 		data: UserCreateRequest
 	): Promise<UserCreateResponse> {
-		const {id, email, first_name, last_name} = await prisma.user.create({
+		const {id, email, name} = await prisma.user.create({
 			data,
 		});
 
 		const response: UserCreateResponse = {
 			id,
+			name,
 			email,
-			name: first_name + " " + last_name,
 		};
 
 		return response;
@@ -45,7 +45,7 @@ class UserRepository implements IUserRepository {
 	}
 
 	public async getUserByEmail(email: string): Promise<UserResponse | null> {
-		return await prisma.user.findUniqueOrThrow({
+		return await prisma.user.findUnique({
 			where: {
 				email,
 			},

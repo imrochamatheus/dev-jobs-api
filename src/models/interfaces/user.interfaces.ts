@@ -1,26 +1,16 @@
 export interface User {
 	id: string;
+	name: string;
 	email: string;
-	admin?: boolean;
 	password: string;
-	last_name: string;
-	first_name: string;
+	recruiter?: boolean;
 
 	created_at: Date;
 }
 
 export interface UserCreateRequest extends Omit<User, "id" | "created_at"> {}
 
-export interface UserCreateResponse extends Pick<User, "id" | "email"> {
-	name: string;
-}
+export interface UserCreateResponse
+	extends Pick<User, "id" | "email" | "name"> {}
 
-export interface UserResponse {
-	id: string;
-	email: string;
-	admin: boolean;
-	last_name: string;
-	first_name: string;
-
-	created_at: Date;
-}
+export interface UserResponse extends Omit<User, "password"> {}

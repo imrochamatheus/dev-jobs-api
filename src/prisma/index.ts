@@ -24,9 +24,8 @@ const addExtensionsToClient = (instance: PrismaClient) => {
 
 					parsedArgs.select = {
 						id: true,
+						name: true,
 						email: true,
-						first_name: true,
-						last_name: true,
 						created_at: true,
 					};
 
