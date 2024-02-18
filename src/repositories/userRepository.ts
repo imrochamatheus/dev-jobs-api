@@ -1,9 +1,9 @@
-import {prisma} from "../prisma";
 import {
 	UserResponse,
 	UserCreateRequest,
 	UserCreateResponse,
 } from "../models/interfaces/user.interfaces";
+import {ExtendedPrismaClient, prisma} from "../prisma";
 
 export interface IUserRepository {
 	getAllUsers(): Promise<UserResponse[]>;
@@ -15,12 +15,12 @@ export interface IUserRepository {
 class UserRepository implements IUserRepository {
 	private static _instance: UserRepository;
 
-	private constructor() {}
+	private constructor(private readonly _prisma: ExtendedPrismaClient) {}
 
 	public async createUser(
 		data: UserCreateRequest
 	): Promise<UserCreateResponse> {
-		const {id, email, name} = await prisma.user.create({
+		const {id, email, name} = await this._prisma.user.create({
 			data,
 		});
 
@@ -33,11 +33,11 @@ class UserRepository implements IUserRepository {
 		return response;
 	}
 	public async getAllUsers(): Promise<UserResponse[]> {
-		return await prisma.user.findMany();
+		return await this._prisma.user.findMany();
 	}
 
 	public async getUserById(id: string): Promise<UserResponse | null> {
-		return prisma.user.findFirst({
+		return this._prisma.user.findFirst({
 			where: {
 				id,
 			},
@@ -45,20 +45,21 @@ class UserRepository implements IUserRepository {
 	}
 
 	public async getUserByEmail(email: string): Promise<UserResponse | null> {
-		return await prisma.user.findUnique({
+		return await this._prisma.user.findUnique({
 			where: {
 				email,
 			},
 		});
 	}
 
-	public static getInstance(): UserRepository {
+	public static getInstance(prisma: ExtendedPrismaClient): UserRepository {
 		if (!UserRepository._instance) {
-			UserRepository._instance = new UserRepository();
+			UserRepository._instance = new UserRepository(prisma);
 		}
 
 		return UserRepository._instance;
 	}
 }
 
-export const userRepository: UserRepository = UserRepository.getInstance();
+export const userRepository: UserRepository =
+	UserRepository.getInstance(prisma);

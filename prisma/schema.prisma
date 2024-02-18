@@ -26,7 +26,7 @@ model Job {
   updated_at                DateTime @default(now())
 
   reporter                  User     @relation(fields: [reporter_id], references: [id])
-  reporter_id                String
+  reporter_id               String
 
   @@map("jobs")
 }

@@ -34,7 +34,7 @@ export class UserController {
 
 		if (response) {
 			res.status(201).send({
-				message: "Usuário criado com sucesso!",
+				message: "Criado com sucesso!",
 				data: response,
 			});
 		}
