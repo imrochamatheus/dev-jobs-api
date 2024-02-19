@@ -1,12 +1,4 @@
-export interface User {
-	id: string;
-	name: string;
-	email: string;
-	password: string;
-	recruiter?: boolean;
-
-	created_at: Date;
-}
+import {User} from "@prisma/client";
 
 export interface UserCreateRequest extends Omit<User, "id" | "created_at"> {}
 

@@ -1,3 +1,4 @@
+import {User} from "@prisma/client";
 import {
 	UserResponse,
 	UserCreateRequest,
@@ -8,7 +9,7 @@ import {ExtendedPrismaClient, prisma} from "../prisma";
 export interface IUserRepository {
 	getAllUsers(): Promise<UserResponse[]>;
 	getUserById(id: string): Promise<UserResponse | null>;
-	getUserByEmail(email: string): Promise<UserResponse | null>;
+	getUserByEmail(email: string): Promise<User | null>;
 	createUser(data: UserCreateRequest): Promise<UserCreateResponse>;
 }
 
@@ -44,7 +45,7 @@ class UserRepository implements IUserRepository {
 		});
 	}
 
-	public async getUserByEmail(email: string): Promise<UserResponse | null> {
+	public async getUserByEmail(email: string): Promise<User | null> {
 		return await this._prisma.user.findUnique({
 			where: {
 				email,
