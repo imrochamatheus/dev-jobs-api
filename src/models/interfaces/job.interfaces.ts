@@ -1,5 +1,3 @@
-import {UserResponse} from "./user.interfaces";
-
 export interface Job {
 	id: number;
 	title: string;
@@ -16,9 +14,6 @@ export interface Job {
 	created_at?: Date;
 }
 
-export interface JobCreate extends Omit<Job, "id" | "created_at"> {}
-
-export interface JobUpdateResponse extends Omit<Job, "reporter_id"> {}
 export interface JobResponse extends Omit<Job, "reporter_id"> {
 	reporter: {
 		name: string;
@@ -26,3 +21,7 @@ export interface JobResponse extends Omit<Job, "reporter_id"> {
 		created_at: Date;
 	};
 }
+
+export interface JobCreate extends Omit<Job, "id" | "created_at"> {}
+
+export interface JobUpdateResponse extends Omit<Job, "reporter_id"> {}
