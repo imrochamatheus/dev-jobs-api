@@ -36,11 +36,8 @@ export class JobService {
 		return job;
 	}
 
-	public async createJob({
-		reporter_id,
-		...data
-	}: JobCreate): Promise<JobResponse> {
-		const reporter = await this._usersRepository.getUserById(reporter_id);
+	public async createJob(data: JobCreate): Promise<JobResponse> {
+		const reporter = await this._usersRepository.getUserById(data.reporter_id);
 
 		if (!reporter) {
 			throw new ApiError(404, "Usuário não encontrado");
@@ -52,7 +49,6 @@ export class JobService {
 
 		return await this._jobRepository.createJob({
 			...data,
-			reporter_id,
 		});
 	}
 }
