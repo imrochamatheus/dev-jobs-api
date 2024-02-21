@@ -5,8 +5,8 @@ import {
 	UserCreateRequest,
 	UserCreateResponse,
 } from "../models/interfaces/user.interfaces";
-import {CustomResponse} from "../helpers/defaultResponse";
 import {IUserService, userService} from "../services/UserService";
+import {CustomResponse} from "../models/interfaces/response.interfaces";
 
 export class UserController {
 	private static _instance: UserController;
@@ -36,6 +36,7 @@ export class UserController {
 			res.status(201).send({
 				message: "Criado com sucesso!",
 				data: response,
+				success: true,
 			});
 		}
 	}
@@ -47,6 +48,7 @@ export class UserController {
 		const users: UserResponse[] = await this._userService.getAllUsers();
 
 		res.status(200).send({
+			success: true,
 			message: "Carregado com sucesso!",
 			data: users,
 		});
@@ -61,6 +63,7 @@ export class UserController {
 		const user: UserResponse = await this._userService.getUserById(user_id);
 
 		res.status(200).send({
+			success: true,
 			message: "Carregado com sucesso!",
 			data: user,
 		});

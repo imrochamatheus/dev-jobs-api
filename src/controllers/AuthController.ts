@@ -1,8 +1,8 @@
 import {Request} from "express";
 
-import {CustomResponse} from "../helpers/defaultResponse";
 import {AuthRequest} from "../models/interfaces/auth.interfaces";
 import {IAuthService, authService} from "../services/AuthService";
+import {CustomResponse} from "../models/interfaces/response.interfaces";
 
 class AuthController {
 	private static _instance: AuthController;
@@ -19,8 +19,8 @@ class AuthController {
 
 		if (!userToken) {
 			res.status(401).json({
-				data: null,
 				message: "Usuário ou senha inválidos!",
+				success: false,
 			});
 
 			return;
@@ -28,7 +28,8 @@ class AuthController {
 
 		res.status(200).json({
 			message: "Login bem sucedido!",
-			data: userToken,
+			token: userToken,
+			success: true,
 		});
 	}
 
