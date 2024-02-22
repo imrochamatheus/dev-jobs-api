@@ -5,7 +5,7 @@ import {
 	UserCreateRequest,
 } from "../models/interfaces/user.interfaces";
 import {IUserService, userService} from "../services/UserService";
-import {CustomResponse} from "../models/interfaces/response.interfaces";
+import {ApiResponse} from "../models/interfaces/response.interfaces";
 
 export class UserController {
 	private static _instance: UserController;
@@ -25,7 +25,7 @@ export class UserController {
 
 	public async createUser(
 		req: Request<{}, {}, UserCreateRequest>,
-		res: CustomResponse<UserResponse>
+		res: ApiResponse<UserResponse>
 	): Promise<void> {
 		const userData: UserCreateRequest = req.body;
 
@@ -42,7 +42,7 @@ export class UserController {
 
 	public async getAllUsers(
 		_: Request,
-		res: CustomResponse<UserResponse[]>
+		res: ApiResponse<UserResponse[]>
 	): Promise<void> {
 		const users: UserResponse[] = await this._userService.getAllUsers();
 
@@ -55,7 +55,7 @@ export class UserController {
 
 	public async getUserById(
 		{params}: Request,
-		res: CustomResponse<UserResponse>
+		res: ApiResponse<UserResponse>
 	): Promise<void> {
 		const user_id: string = params.id;
 

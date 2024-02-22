@@ -1,6 +1,6 @@
 import {Response} from "express";
 
-export interface CustomResponse<T>
+export interface ApiResponse<T>
 	extends Response<{
 		success: boolean;
 		message: string;

@@ -1,7 +1,7 @@
 import {Request} from "express";
 
+import {ApiResponse} from "../models/interfaces/response.interfaces";
 import {CustomRequest} from "../models/interfaces/request.interfaces";
-import {CustomResponse} from "../models/interfaces/response.interfaces";
 import {JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
 
 import {ApiError} from "../helpers/apiError";
@@ -13,7 +13,7 @@ class JobController {
 
 	public async getAllJobs(
 		_: Request,
-		res: CustomResponse<JobResponse[]>
+		res: ApiResponse<JobResponse[]>
 	): Promise<void> {
 		const response = await this.jobService.getAllJobs();
 
@@ -35,9 +35,11 @@ class JobController {
 
 	public async createJob(
 		req: Request,
-		res: CustomResponse<JobResponse>
+		res: ApiResponse<JobResponse>
 	): Promise<void> {
 		const jobData = this.extractJobData(req);
+		console.log(jobData);
+
 		const response = await this.jobService.createJob(jobData);
 
 		if (!response) {
@@ -53,7 +55,7 @@ class JobController {
 
 	public async getJobById(
 		{params}: Request<{id: number}>,
-		res: CustomResponse<JobResponse>
+		res: ApiResponse<JobResponse>
 	): Promise<void> {
 		const {id} = params;
 
