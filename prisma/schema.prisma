@@ -6,30 +6,10 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model Job {
-  id                        Int      @id @default(autoincrement())
-  title                     String   
-  banner                    String?
-  stack                     String
-  company                   String
-  seniority                 String
-  description               String
-  contract_type             String
-  registration_link         String   
-  location_type             String 
-
-  created_at                DateTime @default(now())
-  updated_at                DateTime @default(now())
-
-  reporter                  User     @relation(fields: [reporter_id], references: [id])
-  reporter_id               String
-
-  @@map("jobs")
-}
 
 model User {
   id          String      @id @default(uuid())
@@ -38,9 +18,92 @@ model User {
   password    String
   recruiter   Boolean     @default(false)
 
-  created_at  DateTime   @default(now())    
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @default(now())    
 
   Job Job[]
 
   @@map("users")
+}
+
+
+model Company {
+  id          Int      @id @default(autoincrement())
+  name        String
+  logo        String
+  website     String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now())
+
+  Job Job[]
+
+  @@map("companies")
+}
+
+model Job {
+  id                        Int         @id @default(autoincrement())
+  apply                     String
+  position                  String
+  contract                  String
+  location                  String
+  description               String
+
+  created_at                DateTime    @default(now())
+  updated_at                DateTime    @default(now())
+
+  role                      Role        @relation(fields: [role_id], references: [id])
+  role_id                   Int 
+
+  company                   Company     @relation(fields: [company_id], references: [id])
+  company_id                Int 
+
+  requirement               Rquirement  @relation(fields: [requirement_id], references: [id])
+  requirement_id            Int 
+
+  relator                   User        @relation(fields: [relator_id], references: [id])
+  relator_id                String
+
+
+
+  @@map("jobs")
+}
+
+model Rquirement {
+  id                    Int      @id @default(autoincrement())
+  content               String
+
+  Job                   Job[]
+  RequirementItem       RequirementItem[]
+
+  @@map("requirements")
+}
+
+model RequirementItem {
+  id              Int      @id @default(autoincrement())
+  item            String
+
+  Rquirement      Rquirement @relation(fields: [requirement_id], references: [id])
+  requirement_id  Int
+
+  @@map("requirement_items")
+}
+
+model Role {
+  id             Int      @id @default(autoincrement())
+  content        String
+
+  Job Job[]
+  RoleItem RoleItem[]
+  
+  @@map("roles")
+}
+
+model RoleItem {
+  id              Int      @id @default(autoincrement())
+  item            String
+
+  Role            Role @relation(fields: [role_id], references: [id])
+  role_id         Int
+
+  @@map("role_items")
 }
