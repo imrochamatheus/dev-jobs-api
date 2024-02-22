@@ -3,7 +3,6 @@ import {Request} from "express";
 import {
 	UserResponse,
 	UserCreateRequest,
-	UserCreateResponse,
 } from "../models/interfaces/user.interfaces";
 import {IUserService, userService} from "../services/UserService";
 import {CustomResponse} from "../models/interfaces/response.interfaces";
@@ -26,7 +25,7 @@ export class UserController {
 
 	public async createUser(
 		req: Request<{}, {}, UserCreateRequest>,
-		res: CustomResponse<UserCreateResponse>
+		res: CustomResponse<UserResponse>
 	): Promise<void> {
 		const userData: UserCreateRequest = req.body;
 

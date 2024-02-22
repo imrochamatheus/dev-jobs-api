@@ -1,16 +1,14 @@
-import {User} from "@prisma/client";
 import {
 	UserResponse,
 	UserCreateRequest,
-	UserCreateResponse,
 } from "../models/interfaces/user.interfaces";
 import {ExtendedPrismaClient, prisma} from "../prisma";
 
 export interface IUserRepository {
 	getAllUsers(): Promise<UserResponse[]>;
 	getUserById(id: string): Promise<UserResponse | null>;
-	getUserByEmail(email: string): Promise<User | null>;
-	createUser(data: UserCreateRequest): Promise<UserCreateResponse>;
+	getUserByEmail(email: string): Promise<UserResponse | null>;
+	createUser(data: UserCreateRequest): Promise<UserResponse>;
 }
 
 class UserRepository implements IUserRepository {
@@ -18,23 +16,25 @@ class UserRepository implements IUserRepository {
 
 	private constructor(private readonly _prisma: ExtendedPrismaClient) {}
 
-	public async createUser(
-		data: UserCreateRequest
-	): Promise<UserCreateResponse> {
-		const {id, email, name} = await this._prisma.user.create({
+	private readonly selectUserFields: Record<keyof UserResponse, boolean> = {
+		id: true,
+		name: true,
+		email: true,
+		recruiter: true,
+		created_at: true,
+		updated_at: true,
+	};
+
+	public async createUser(data: UserCreateRequest): Promise<UserResponse> {
+		return await this._prisma.user.create({
 			data,
+			select: this.selectUserFields,
 		});
-
-		const response: UserCreateResponse = {
-			id,
-			name,
-			email,
-		};
-
-		return response;
 	}
 	public async getAllUsers(): Promise<UserResponse[]> {
-		return await this._prisma.user.findMany();
+		return await this._prisma.user.findMany({
+			select: this.selectUserFields,
+		});
 	}
 
 	public async getUserById(id: string): Promise<UserResponse | null> {
@@ -42,14 +42,16 @@ class UserRepository implements IUserRepository {
 			where: {
 				id,
 			},
+			select: this.selectUserFields,
 		});
 	}
 
-	public async getUserByEmail(email: string): Promise<User | null> {
+	public async getUserByEmail(email: string): Promise<UserResponse | null> {
 		return await this._prisma.user.findUnique({
 			where: {
 				email,
 			},
+			select: this.selectUserFields,
 		});
 	}
 

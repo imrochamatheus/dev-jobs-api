@@ -1,15 +1,13 @@
-import {prisma} from "../prisma";
-
 import {
 	UserResponse,
 	UserCreateRequest,
-	UserCreateResponse,
 } from "../models/interfaces/user.interfaces";
+
 import {ApiError} from "../helpers/apiError";
 import {IUserRepository, userRepository} from "../repositories/userRepository";
 
 export interface IUserService {
-	createUser(data: UserCreateRequest): Promise<UserCreateResponse | void>;
+	createUser(data: UserCreateRequest): Promise<UserResponse | void>;
 	getAllUsers(): Promise<UserResponse[]>;
 	getUserById(id: string): Promise<UserResponse>;
 }
@@ -31,26 +29,24 @@ export class UserService implements IUserService {
 
 	public async createUser(
 		userData: UserCreateRequest
-	): Promise<UserCreateResponse | void> {
+	): Promise<UserResponse | void> {
 		const user = await this._userRepository.getUserByEmail(userData.email);
 
 		if (user) {
-			throw new ApiError(409, "Este e-mail já está cadastrado");
+			throw new ApiError(409, "Este e-mail já está em uso!");
 		}
 
-		const createdUser = await prisma.user.create({
-			data: userData,
-		});
+		const createdUser = await this._userRepository.createUser(userData);
 
-		return {
-			id: createdUser.id,
-			name: createdUser.name,
-			email: createdUser.email,
-		};
+		if (!createdUser) {
+			throw new ApiError(500, "Erro ao criar usuário!");
+		}
+
+		return createdUser;
 	}
 
 	public async getAllUsers(): Promise<UserResponse[]> {
-		const users = await prisma.user.findMany();
+		const users = await this._userRepository.getAllUsers();
 
 		return users;
 	}
