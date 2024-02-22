@@ -16,24 +16,26 @@ class UserRepository implements IUserRepository {
 
 	private constructor(private readonly _prisma: ExtendedPrismaClient) {}
 
-	private readonly selectUserFields: Record<keyof UserResponse, boolean> = {
-		id: true,
-		name: true,
-		email: true,
-		recruiter: true,
-		created_at: true,
-		updated_at: true,
-	};
-
+	private selectUserFields(): Record<keyof UserResponse, boolean> {
+		return {
+			id: true,
+			name: true,
+			email: true,
+			recruiter: true,
+			created_at: true,
+			updated_at: true,
+		};
+	}
 	public async createUser(data: UserCreateRequest): Promise<UserResponse> {
 		return await this._prisma.user.create({
 			data,
-			select: this.selectUserFields,
+			select: this.selectUserFields(),
 		});
 	}
+
 	public async getAllUsers(): Promise<UserResponse[]> {
 		return await this._prisma.user.findMany({
-			select: this.selectUserFields,
+			select: this.selectUserFields(),
 		});
 	}
 
@@ -42,7 +44,7 @@ class UserRepository implements IUserRepository {
 			where: {
 				id,
 			},
-			select: this.selectUserFields,
+			select: this.selectUserFields(),
 		});
 	}
 
@@ -51,7 +53,7 @@ class UserRepository implements IUserRepository {
 			where: {
 				email,
 			},
-			select: this.selectUserFields,
+			select: this.selectUserFields(),
 		});
 	}
 
