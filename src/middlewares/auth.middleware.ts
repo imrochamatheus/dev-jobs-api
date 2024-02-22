@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {JsonWebTokenError, verify} from "jsonwebtoken";
 
 import {ApiError} from "../helpers/apiError";
-import {CustomRequest} from "../models/interfaces/request.interfaces";
+import {ApiRequest} from "../models/interfaces/request.interfaces";
 
 export const authMiddleware = (
 	req: Request,
@@ -28,7 +28,7 @@ export const authMiddleware = (
 			throw new JsonWebTokenError("Token inválido!");
 		}
 
-		const customRequest = req as CustomRequest;
+		const customRequest = req as ApiRequest;
 		customRequest.decoded = decodedToken;
 
 		next();

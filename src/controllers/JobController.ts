@@ -1,7 +1,7 @@
 import {Request} from "express";
 
 import {ApiResponse} from "../models/interfaces/response.interfaces";
-import {CustomRequest} from "../models/interfaces/request.interfaces";
+import {ApiRequest} from "../models/interfaces/request.interfaces";
 import {JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
 
 import {ApiError} from "../helpers/apiError";
@@ -25,7 +25,7 @@ class JobController {
 	}
 
 	public extractJobData(req: Request): JobCreate {
-		const {body, decoded} = req as CustomRequest<{}, {}, JobCreate>;
+		const {body, decoded} = req as ApiRequest<{}, {}, JobCreate>;
 
 		return {
 			...body,
