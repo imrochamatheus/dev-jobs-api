@@ -19,19 +19,6 @@ const addExtensionsToClient = (instance: PrismaClient) => {
 	return instance.$extends({
 		query: {
 			user: {
-				findMany: ({args, query}) => {
-					const parsedArgs = args as Prisma.UserFindManyArgs;
-
-					parsedArgs.select = {
-						id: true,
-						name: true,
-						email: true,
-						created_at: true,
-					};
-
-					return query(parsedArgs);
-				},
-
 				$allOperations({operation, args, query}) {
 					if (!requiresPasswordHashing(operation, args)) {
 						return query(args);
