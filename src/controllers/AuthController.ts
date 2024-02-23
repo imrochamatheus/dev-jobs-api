@@ -2,7 +2,7 @@ import {Request} from "express";
 
 import {AuthRequest} from "../models/interfaces/auth.interfaces";
 import {IAuthService, authService} from "../services/AuthService";
-import {CustomResponse} from "../models/interfaces/response.interfaces";
+import {ApiResponse} from "../models/interfaces/response.interfaces";
 
 class AuthController {
 	private static _instance: AuthController;
@@ -11,7 +11,7 @@ class AuthController {
 
 	public async login(
 		req: Request<{}, {}, AuthRequest>,
-		res: CustomResponse<string | null>
+		res: ApiResponse<string | null>
 	): Promise<void> {
 		const {email, password} = req.body;
 

@@ -1,10 +1,11 @@
 import {Request} from "express";
 
-import {ApiResponse} from "../models/interfaces/response.interfaces";
+import {JobResponse} from "../models/interfaces/job.interfaces";
 import {ApiRequest} from "../models/interfaces/request.interfaces";
-import {JobCreate, JobResponse} from "../models/interfaces/job.interfaces";
+import {ApiResponse} from "../models/interfaces/response.interfaces";
 
 import {ApiError} from "../helpers/apiError";
+import {Job} from "../schemas/job.schema";
 import {JobService, jobService} from "../services/JobService";
 
 class JobController {
@@ -24,23 +25,22 @@ class JobController {
 		});
 	}
 
-	public extractJobData(req: Request): JobCreate {
-		const {body, decoded} = req as ApiRequest<{}, {}, JobCreate>;
-
-		return {
-			...body,
-			reporter_id: decoded.id,
-		};
-	}
-
 	public async createJob(
 		req: Request,
-		res: ApiResponse<JobResponse>
+		res: ApiResponse<Job.Response.Create>
 	): Promise<void> {
-		const jobData = this.extractJobData(req);
-		console.log(jobData);
+		const {body, decoded} = req as ApiRequest<{}, {}, Job.Request.Create>;
 
-		const response = await this.jobService.createJob(jobData);
+		if (body.relator_id !== decoded.id) {
+			throw new ApiError(
+				403,
+				"O relator deve ser o mesmo usuário autenticado!"
+			);
+		}
+
+		const response: Job.Response.Create = await this.jobService.createJob({
+			...body,
+		});
 
 		if (!response) {
 			throw new ApiError(500, "Erro ao criar vaga!");
