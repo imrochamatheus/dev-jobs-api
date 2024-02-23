@@ -4,6 +4,7 @@ import {sign} from "jsonwebtoken";
 
 import {ApiError} from "../helpers/apiError";
 import {IUserRepository, userRepository} from "../repositories/userRepository";
+import {UserResponse} from "../models/interfaces/user.interfaces";
 
 export interface IAuthService {
 	login(email: string, password: string): Promise<string | void>;
@@ -15,7 +16,9 @@ class AuthService {
 	private constructor(private readonly _userRepository: IUserRepository) {}
 
 	public async login(email: string, password: string): Promise<string | void> {
-		const user: User | null = await this._userRepository.getUserByEmail(email);
+		const user: UserResponse | null = await this._userRepository.getUserByEmail(
+			email
+		);
 		const error = new ApiError(401, "Usuário ou senha inválidos!");
 
 		if (!user) {

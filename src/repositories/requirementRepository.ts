@@ -1,23 +1,34 @@
+import {prisma} from "../prisma";
+import {Requirement} from "../schemas/requirement.schema";
+
 export interface IRequirementRepository {
 	getAllRequirements(): Promise<any>;
 	getRequirementById(id: number): Promise<any>;
-	createRequirement(requirement: any): Promise<any>;
+	createRequirement(
+		requirement: Requirement.Request.Create
+	): Promise<Requirement.Response.Create>;
 }
 
 export class RequirementRepository implements IRequirementRepository {
 	private static _instance: IRequirementRepository;
 
 	private constructor() {}
-	public getAllRequirements(): Promise<any> {
+	public async getAllRequirements(): Promise<any> {
 		throw new Error("Method not implemented.");
 	}
 
-	public getRequirementById(id: number): Promise<any> {
+	public async getRequirementById(id: number): Promise<any> {
 		throw new Error("Method not implemented.");
 	}
 
-	public createRequirement(requirement: any): Promise<any> {
-		throw new Error("Method not implemented.");
+	public async createRequirement(
+		data: Requirement.Request.Create
+	): Promise<Requirement.Response.Create> {
+		return await prisma.requirement.create({
+			data: {
+				content: data.content,
+			},
+		});
 	}
 
 	public static getInstance(): IRequirementRepository {

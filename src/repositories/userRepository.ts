@@ -24,6 +24,7 @@ class UserRepository implements IUserRepository {
 			recruiter: true,
 			created_at: true,
 			updated_at: true,
+			password: true,
 		};
 	}
 	public async createUser(data: UserCreateRequest): Promise<UserResponse> {
@@ -53,7 +54,6 @@ class UserRepository implements IUserRepository {
 			where: {
 				email,
 			},
-			select: this.selectUserFields(),
 		});
 	}
 
