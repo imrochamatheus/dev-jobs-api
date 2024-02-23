@@ -1,27 +1,29 @@
-export interface Job {
-	id: number;
-	title: string;
-	stack: string;
-	company: string;
-	banner: string | null;
-	seniority: string;
-	description: string;
-	reporter_id: string;
-	contract_type: string;
-	location_type: string;
-	registration_link: string;
+import {Job} from "@prisma/client";
 
-	created_at?: Date;
-}
-
-export interface JobResponse extends Omit<Job, "reporter_id"> {
-	reporter: {
+export interface JobCreate {
+	company: {
 		name: string;
-		email: string;
-		created_at: Date;
+		logo: string;
+		website: string;
 	};
+	position: string;
+	contract: string;
+	location: string;
+	apply: string;
+	description: string;
+	requirements: {
+		content: string;
+		items: string[];
+	};
+	role: {
+		content: string;
+		items: string[];
+	};
+	reporter_id: string;
 }
 
-export interface JobCreate extends Omit<Job, "id" | "created_at"> {}
+export interface JobResponse extends Omit<Job, "reporter_id"> {}
+
+// export interface JobCreate extends Omit<Job, "id" | "created_at"> {}
 
 export interface JobUpdateResponse extends Omit<Job, "reporter_id"> {}
