@@ -10,7 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
   id          String      @id @default(uuid())
   email       String      @unique
@@ -25,7 +24,6 @@ model User {
 
   @@map("users")
 }
-
 
 model Company {
   id          Int      @id @default(autoincrement())
@@ -57,50 +55,48 @@ model Job {
   company                   Company     @relation(fields: [company_id], references: [id])
   company_id                Int 
 
-  requirement               Rquirement  @relation(fields: [requirement_id], references: [id])
+  requirements              Requirement  @relation(fields: [requirement_id], references: [id])
   requirement_id            Int 
 
   relator                   User        @relation(fields: [relator_id], references: [id])
   relator_id                String
 
-
-
   @@map("jobs")
 }
 
-model Rquirement {
+model Requirement {
   id                    Int      @id @default(autoincrement())
   content               String
 
   Job                   Job[]
-  RequirementItem       RequirementItem[]
+  itens                 RequirementItem[]
 
   @@map("requirements")
 }
 
 model RequirementItem {
   id              Int      @id @default(autoincrement())
-  item            String
+  content         String
 
-  Rquirement      Rquirement @relation(fields: [requirement_id], references: [id])
+  Rquirement      Requirement @relation(fields: [requirement_id], references: [id])
   requirement_id  Int
 
-  @@map("requirement_items")
+  @@map("requirement_itens")
 }
 
 model Role {
   id             Int      @id @default(autoincrement())
   content        String
-
-  Job Job[]
-  RoleItem RoleItem[]
+  
+  itens          RoleItem[]
+  Job            Job[]
   
   @@map("roles")
 }
 
 model RoleItem {
   id              Int      @id @default(autoincrement())
-  item            String
+  content         String
 
   Role            Role @relation(fields: [role_id], references: [id])
   role_id         Int
